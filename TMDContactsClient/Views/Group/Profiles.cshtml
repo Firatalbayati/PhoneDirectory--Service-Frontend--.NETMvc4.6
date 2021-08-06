@@ -1,0 +1,129 @@
+﻿@model  TMDContactsClient.Models.Groups
+@{
+    ViewBag.Title = "Profiles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .Profile {
+        vertical-align: middle;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+    }
+</style>
+
+<div class="card card-1 ">
+    <div class="modal-header" style="border: 0;">
+        <input id="txtGroupId" value="@Model.Id" type="hidden" asp-for="Id" name="Id" />
+        <a href="~/Group/Index" class="close" data-dismiss="modal" style="color:red;" role="button">&times;</a>
+        <div class="text-center">
+            <div class="list-item" data-id="13" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="padding-left:12px;">
+                <h4 style="font-family:Times New Roman" , Times, serif;">@Model.Name gurubuna ait üyeler</h4>
+            </div>
+        </div>
+    </div>
+    <form action="javascript:btnDelete;">
+
+        <div style="padding-left:30px; padding-right:30px;">
+            <!-- Display success if any in the Bootstrap alert -->
+            <div id="divSuccess" class="alert alert-success collapse text-center">
+                <a id="linkClose" href="#" class="close">&times;</a>
+                <div id="divSuccessText"></div>
+            </div>
+            <div class="text-center">
+                <span id="Success"></span>
+            </div>
+            <!-- Display errors if any in the Bootstrap alert -->
+            <div id="divError" class="alert alert-danger collapse text-center">
+                <a id="linkClose2" href="#" class="close">&times;</a>
+                <div id="divErrorText"></div>
+            </div>
+            <div class="text-center">
+                <span id="error"></span>
+            </div>
+        </div>
+
+        <div class="page-content " id="page-content">
+            <div class="padding">
+                @Html.Action("ProfileContacts", "Group", new { id = Model.Id })
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="~/Group/Update/@Model.Id" class=" btn bn30" style="text-align:center; font-size:8px;" role="button">
+                <i class="bi bi-pencil-square"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                </svg>
+            </a>
+            <a id="btnDelete" class=" btn bn30" style="text-align:center;font-size:8px;" role="button">
+                <i class="bi bi-trash-fill"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                </svg>
+            </a>
+        </div>
+    </form>
+</div>
+
+
+
+<script>
+
+    $("#btnDelete").click(function () {
+        if (confirm("Silmek istediğinizden emin misiniz?")) {
+
+            var info = new Object();
+            info.Id = @Html.DisplayFor(m => m.Id);
+            Token = 'Bearer ' + sessionStorage.getItem('Token');
+
+            if (info.Name === "") {
+                $('#divErrorText').text('Zorunlu alanları doldurunuz');
+                $('#divError').show('fade');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "http://tmdcontacts-api.dev.tmd/api/Groups/Delete?id=" + info.Id,
+                    data: JSON.stringify(info),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    headers: {
+                        'Authorization': Token
+                    },
+                    success: function (response) {
+                        $('.alert-success').hide();
+                        $('.alert-danger').hide();
+                        $('#divSuccessText').text(response.message);
+                        $('#divSuccess').show('fade');
+                    },
+                    error: function (response) {
+                        $('.alert-success').hide();
+                        $('.alert-danger').hide();
+                        $('#divErrorText').text(response.responseJSON.message);
+                        $('#divError').show('fade');
+                    }
+                });
+            }
+            return true;
+        }
+        return false;
+    });
+
+    $('#linkClose').click(function () {
+        $('#divSuccess').hide('fade');
+    });
+
+    $('#linkClose2').click(function () {
+        $('#divError').hide('fade');
+    });
+
+</script>
+
+
+
+
+
+

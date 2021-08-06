@@ -1,0 +1,18 @@
+﻿@model TMDContactsClient.Models.Contacts
+@{
+    ViewBag.Title = "AddToGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card card-1 ">
+    <div class="modal-header" style="border: 0;">
+        <a href="~/Contact/Profiles/@Model.Id" class="close" data-dismiss="modal" style="color:red;" role="button">&times;</a>
+        <h4 class="modal-title text-center" style="padding-top: 20px; color:black;" id="myModalLabel">@Model.Name için bir grup seçin</h4>
+    </div>
+    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @Id = "txtContactId", required = "required", @maxlength = "30", style = "display:none" } })
+    @Html.Action("AddToGroupPartial", "Group", new { id = Model.Id })
+</div>
+
+
+
+

@@ -1,0 +1,272 @@
+﻿@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
+
+</head>
+
+<style>
+    .labelChooseFile {
+        display: inline-block;
+        background-color: indigo;
+        color: white;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+</style>
+
+<body>
+    <div class="card card-1">
+        <div class="modal-header" style="border: 0;">
+            <a href="~/Contact/Index" class="close" data-dismiss="modal" style="color:red;" role="button">&times;</a>
+            <h4 class="modal-title text-center" style="padding-top: 20px; color:black;" id="myModalLabel">Yeni Kişi Ekle</h4>
+        </div>
+        <form action="javascript:btnAdd;" id="login" onsubmit="process(event)">
+            <div class="col-md-12">
+
+                <div style="padding-left:30px; padding-right:30px; padding-top:30px;">
+                    <!-- Display success if any in the Bootstrap alert -->
+                    <div id="divSuccess" class="alert alert-success collapse text-center">
+                        <a id="linkClose" href="#" class="close">&times;</a>
+                        <div id="divSuccessText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="Success"></span>
+                    </div>
+                    <!-- Display errors if any in the Bootstrap alert -->
+                    <div id="divError" class="alert alert-danger collapse text-center">
+                        <a id="linkClose2" href="#" class="close">&times;</a>
+                        <div id="divErrorText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="error"></span>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 16px;">
+                    <div class="form-group col-md-6">
+                        <label class="Font">Ad</label>
+                        <input type="text" class="form-control" id="txtName" name="Name" placeholder="Ad" required maxlength="30">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="Font">Soyad</label>
+                        <input type="text" class="form-control" id="txtSurname" name="Surname" placeholder="Soyad" required maxlength="30">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="Font">E-Posta</label>
+                        <input type="email" class="form-control" id="txtEmail" name="Email" aria-describedby="emailHelp" placeholder="E-Posta" required maxlength="60">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="Font">Tel</label>
+                        <div>
+                            <input type="text" class="form-control" id="txtPhone" placeholder="000 000 0000" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="14" style="width: 300px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="Font">İş Tel</label> <!--TelHome and telBussines number control-->
+                        <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" id="txtTelBusiness" name="TelBusiness" placeholder="İş Tel" maxlength="30">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="Font">Ev Tel</label> <!--TelHome and telBussines number control-->
+                        <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" id="txtTelHome" name="TelHome" placeholder="Ev Tel" maxlength="30">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="Font">Başlık</label>
+                        <input type="text" class="form-control" id="txtTitle" name="Title" placeholder="Başlık" maxlength="30">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="Font">Şirket</label>
+                        <input type="text" class="form-control" id="txtCompany" name="Company" placeholder="Şirket" maxlength="30">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="Font">Not</label>
+                        <input type="text" class="form-control" id="txtNote" name="Note" placeholder="Not">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="Font">Doğum Tarihi</label>
+                        <input type="date" class="form-control" id="txtBirthDate" name="BirthDate" placeholder="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="Font">Adres</label>
+                        <textarea class="form-control" id="txtAddress" name="Address" rows="4" cols="110" maxlength="300"></textarea>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="file" id="txtPhoto" class="hidden" name="Photo" multiple accept="image/png, image/gif, image/jpeg" />
+                        <label class="labelChooseFile" for="txtPhoto">Fotoğraf yükle</label>
+
+                        <label class="lable-for-photo">  Dosya seçilmedi</label>
+                        <label class="alert alert-danger alert-danger-for-photo" style="display: none; height:30px; padding-top:3px;">Dosya seçilmedi</label>
+                        <label class="alert alert-success alert-success-for-photo" style="display: none; height:30px; padding-top:3px;"> </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="btnAdd" class="btn bn30" style="font-size:11px;">Kaydet</button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <script>
+
+        // sessionStorage.getItem('Email');
+        // sessionStorage.getItem('UserId');
+        // sessionStorage.getItem('Token');
+
+        var uploadField = document.getElementById("txtPhoto");
+
+        uploadField.onchange = function () {
+
+            if (this.files[0].size > 1048576) {
+                //1 Mb
+                $('#divErrorText').text('Dosya boyutu 1mb den büyük olamaz!');
+                $('#divError').show('fade');
+                this.value = "";
+
+                //Show Dosya bulunamadı in right
+                $('.lable-for-photo').hide();
+                $('.alert-success-for-photo').hide();
+                const danger = document.querySelector(".alert-danger-for-photo");
+                event.preventDefault();
+                danger.style.display = "";
+                danger.innerHTML = `<strong>Dosya yüklenmedi</strong>`;
+            }
+            else {
+                //Base64String
+                var file = document.querySelector('input[type=file]')['files'][0];
+                let base64String = "";
+                var reader = new FileReader();
+
+                reader.onload = function () {
+                    base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+                    imageBase64String = base64String;
+                }
+                reader.readAsDataURL(file);
+
+                //Show file name in right
+                $('.lable-for-photo').hide();
+                $('.alert-danger').hide();
+                $('.alert-danger-for-photo').hide();
+                const success = document.querySelector(".alert-success-for-photo");
+                event.preventDefault();
+                const PhotoName = file.name;
+                success.style.display = "";
+
+                if (PhotoName.length > 18) {
+                    const a = PhotoName.substring(0, 7);
+                    const b = PhotoName.slice(-8);
+                    success.innerHTML = `${a}...${b}`;
+                }
+                else {
+                    success.innerHTML = `${PhotoName}`;
+                }
+            };
+        };
+
+        //PhoneInput 1
+        var code = "+90"; // Assigning value from model.
+        $('#txtPhone').val(code);
+        $('#txtPhone').intlTelInput({
+            autoHideDialCode: true,
+            autoPlaceholder: "ON",
+            dropdownContainer: document.body,
+            formatOnDisplay: true,
+            hiddenInput: "full_number",
+            initialCountry: "auto",
+            nationalMode: true,
+            placeholderNumberType: "MOBILE",
+            preferredCountries: ['TR'],
+            separateDialCode: true
+        });
+
+
+        $("#btnAdd").click(function () {
+
+            //PhoneInput 2
+            var code = $("#txtPhone").intlTelInput("getSelectedCountryData").dialCode;
+            var phoneNumber = $('#txtPhone').val();
+            var Tel = '+' + code + ' ' + phoneNumber;
+
+
+            var info = new Object();
+            info.Name = $('#txtName').val().trim();
+            info.Surname = $('#txtSurname').val().trim();
+            info.Tel = Tel;
+            info.TelBusiness = $('#txtTelBusiness').val().trim();
+            info.TelHome = $('#txtTelHome').val().trim();
+            info.Email = $('#txtEmail').val().trim();
+            info.Address = $('#txtAddress').val().trim();
+            if (document.getElementById("txtPhoto").files.length == 0) {
+                info.Photo = null;
+            }
+            else {
+                info.Photo = imageBase64String;
+            }
+            info.Company = $('#txtCompany').val().trim();
+            info.Title = $('#txtTitle').val().trim();
+            info.BirthDate = $('#txtBirthDate').val().trim();
+            info.Note = $('#txtNote').val().trim();
+            info.UserId = sessionStorage.getItem('UserId');
+            Token = 'Bearer ' + sessionStorage.getItem('Token');
+            debugger
+
+            if (info.Name === "" || info.Surname === "" || phoneNumber === "" || info.Email === "") {
+                $('#divErrorText').text('Zorunlu alanları doldurunuz');
+                $('#divError').show('fade');
+            }
+            else {
+                $.ajax({
+                    url: "http://tmdcontacts-api.dev.tmd/api/Contacts/Add",
+                    type: "POST",
+                    data: JSON.stringify(info),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    headers: {
+                        'Authorization': Token
+                    },
+                    success: function (response) {
+                        $('.alert-success').hide();
+                        $('.alert-danger').hide();
+                        $('#divSuccessText').text(response.message);
+                        $('#divSuccess').show('fade');
+                    },
+                    error: function (response) {
+                        $('.alert-success').hide();
+                        $('.alert-danger').hide();
+                        $('#divErrorText').text(response.responseJSON.message);
+                        $('#divError').show('fade');
+                    }
+                });
+            }
+            return true;
+        });
+
+        $('#linkClose').click(function () {
+            $('#divSuccess').hide('fade');
+        });
+
+        $('#linkClose2').click(function () {
+            $('#divError').hide('fade');
+        });
+
+    </script>
+</body>

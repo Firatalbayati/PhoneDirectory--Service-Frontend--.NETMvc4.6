@@ -1,0 +1,95 @@
+﻿@model IEnumerable<TMDContactsClient.Models.Groups>
+@{
+    Layout = null;
+}
+
+<form class="text-center" action="javascript:btnAdd;">
+    <div class="col-md-12">
+
+        <div style="padding-left:30px; padding-right:30px; padding-top:20px;">
+            <!-- Display success if any in the Bootstrap alert -->
+            <div id="divSuccess" class="alert alert-success collapse text-center">
+                <a id="linkClose" href="#" class="close">&times;</a>
+                <div id="divSuccessText"></div>
+            </div>
+            <div class="text-center">
+                <span id="Success"></span>
+                <span id="error"></span>
+            </div>
+            <!-- Display errors if any in the Bootstrap alert -->
+            <div id="divError" class="alert alert-danger collapse text-center">
+                <a id="linkClose2" href="#" class="close">&times;</a>
+                <div id="divErrorText"></div>
+            </div>
+            <div class="text-center">
+                <span id="error"></span>
+            </div>
+        </div>
+
+        <div class="row" style="padding-top: 16px;">
+            <select class="bn30" style="font-size: 13px; background-color:black;" id="txtId">
+                @foreach (var item in Model)
+                {
+                    <option id="txtId" value="@item.Id">@item.Name</option>
+
+                }
+            </select>
+        </div>
+        <br />
+        <br />
+        <br />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="btnAdd" class="btn bn30" style="font-size:11px;">Kaydet</button>
+    </div>
+</form>
+
+
+
+<script>
+
+    $("#btnAdd").click(function () {
+
+        var info = new Object();
+        info.GroupId = $('#txtId').val();
+        info.ContactId = $('#txtContactId').val();
+        Token = 'Bearer ' + sessionStorage.getItem('Token');
+
+        if (info.GroupId === "") {
+            alert("Zorunlu alanları doldurunuz");
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "http://tmdcontacts-api.dev.tmd/api/GroupsContacts/Add",
+                data: JSON.stringify(info),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: {
+                    'Authorization': Token
+                },
+                success: function (response) {
+                    $('.alert-success').hide();
+                    $('.alert-danger').hide();
+                    $('#divSuccessText').text(response.message);
+                    $('#divSuccess').show('fade');
+                },
+                error: function (response) {
+                    $('.alert-success').hide();
+                    $('.alert-danger').hide();
+                    $('#divErrorText').text(response.statusText);
+                    $('#divError').show('fade');
+                }
+            });
+        }
+        return true;
+    });
+
+    $('#linkClose').click(function () {
+        $('#divSuccess').hide('fade');
+    });
+
+    $('#linkClose2').click(function () {
+        $('#divError').hide('fade');
+    });
+</script>

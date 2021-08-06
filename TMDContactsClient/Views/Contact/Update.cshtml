@@ -1,0 +1,260 @@
+﻿@model  TMDContactsClient.Models.Contacts
+@{
+
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .labelChooseFile {
+        display: inline-block;
+        background-color: indigo;
+        color: white;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="card card-1 ">
+    <div class="modal-header">
+        <a href="~/Contact/Profiles/@Model.Id" class="close" data-dismiss="modal" style="color:red;" role="button">&times;</a>
+        <h4 class="modal-title text-center" style="padding-top: 20px; color:black;" id="myModalLabel">Güncelle</h4>
+    </div>
+    <form method="post" action="javascript:btnUpdate;">
+        <div class="col-md-12">
+            <div class="row" style="padding-top: 16px;">
+
+                <div style="padding-left:30px; padding-right:30px; padding-top:20px;">
+                    <!-- Display errors if any in the Bootstrap alert -->
+                    <div id="divSuccess" class="alert alert-success collapse text-center">
+                        <a id="linkClose" href="#" class="close">&times;</a>
+                        <div id="divSuccessText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="Success"></span>
+                    </div>
+
+
+                    <!-- Display errors if any in the Bootstrap alert -->
+                    <div id="divError" class="alert alert-danger collapse text-center">
+                        <a id="linkClose2" href="#" class="close">&times;</a>
+                        <div id="divErrorText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="error"></span>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="Font">Ad</label>
+                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @Id = "txtId", required = "required", @maxlength = "30", style = "display:none" } })
+
+
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @Id = "txtName", required = "required", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="Font">Soyad</label>
+                    @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control", @Id = "txtSurname", required = "required", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="Font">E-Posta</label>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @Id = "txtEmail", type = "email", required = "required", @maxlength = "60" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="Font">Tel</label>
+                    @Html.EditorFor(model => model.Tel, new { htmlAttributes = new { @class = "form-control", @Id = "txtTel", required = "required", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.Tel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="Font">İş Tel</label>
+                    @Html.EditorFor(model => model.TelBusiness, new { htmlAttributes = new { @class = "form-control", @Id = "txtTelBusiness", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.TelBusiness, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="Font">Ev Tel</label>
+                    @Html.EditorFor(model => model.TelHome, new { htmlAttributes = new { @class = "form-control", @Id = "txtTelHome", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.TelHome, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="Font">Başlık</label>
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @Id = "txtTitle", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="Font">Şirket</label>
+                    @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control", @Id = "txtCompany", @maxlength = "30" } })
+                    @Html.ValidationMessageFor(model => model.Company, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="Font">Not</label>
+                    @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @Id = "txtNote" } })
+                    @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="Font">Doğum Tarihi</label>
+                    @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control", @Id = "txtBirthDate", @type = "date" } })
+                    @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="Font">Adres</label>
+                    <textarea class="form-control" id="txtAddress" rows="4" cols="110" maxlength="300">@Model.Address</textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.EditorFor(model => model.Photo, new { htmlAttributes = new { @class = "form-control", @Id = "txtOldPhoto", style = "display:none" } })
+                    <input type="file" id="txtPhoto" class="hidden" name="Photo" multiple accept="image/png, image/gif, image/jpeg" />
+                    <label class="labelChooseFile" for="txtPhoto">Fotoğraf yükle</label>
+
+                    @Html.EditorFor(model => model.Photo, new { htmlAttributes = new { @class = "form-control", @Id = "txtOldPhoto", style = "display:none" } })
+                    <input type="submit" id="txtDeletePhoto" class="hidden" name="Photo" multiple accept="image/png, image/gif, image/jpeg" />
+                    <label class="labelChooseFile" for="txtDeletePhoto">Fotoğrafı sil</label>
+
+                    @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group modal-footer">
+            <button type="submit" id="btnUpdate" onclick="upload-file" value="Güncelle" class="btn bn30" style="font-size:11px;">Güncelle</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+    var uploadField = document.getElementById("txtPhoto");
+
+    uploadField.onchange = function () {
+        if (this.files[0].size > 1048576) {
+            //1 Mb
+            alert("Dosya boyutu 1mb den büyük olamaz!");
+            this.value = "";
+        }
+        else {
+            //Base64String
+            var file = document.querySelector('input[type=file]')['files'][0];
+            let base64String = "";
+
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+                imageBase64String = base64String;
+            }
+            reader.readAsDataURL(file);
+        };
+    };
+
+
+    $("#btnUpdate").click(function () {
+
+        var info = new Object();
+        info.Id = $('#txtId').val().trim();
+        info.Name = $('#txtName').val().trim();
+        info.Surname = $('#txtSurname').val().trim();
+        info.Tel = $('#txtTel').val().trim();
+        info.TelBusiness = $('#txtTelBusiness').val().trim();
+        info.TelHome = $('#txtTelHome').val().trim();
+        info.Email = $('#txtEmail').val().trim();
+        info.Address = $('#txtAddress').val().trim();
+        if (document.getElementById("txtPhoto").files.length == 0) {
+            info.Photo = $('#txtOldPhoto').val().trim();
+        }
+        else
+        {
+            info.Photo = imageBase64String;
+        }
+        info.Company = $('#txtCompany').val().trim();
+        info.Title = $('#txtTitle').val().trim();
+        info.BirthDate = $('#txtBirthDate').val().trim();
+        info.Note = $('#txtNote').val().trim();
+        info.UserId = sessionStorage.getItem('UserId');
+        Token = 'Bearer ' + sessionStorage.getItem('Token');
+
+        if (info.Name === "" || info.Surname === "" || info.Tel === "" || info.Email === "") {
+            $('#divErrorText').text('Zorunlu alanları doldurunuz');
+            $('#divError').show('fade');
+        }
+        else
+        {
+            $.ajax({
+                url: "http://tmdcontacts-api.dev.tmd/api/Contacts/Update",
+                type: "POST",
+                data: JSON.stringify(info),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: {
+                    'Authorization': Token
+                },
+                success: function (response) {
+                    $('.alert-success').hide();
+                    $('.alert-danger').hide();
+                    $('#divSuccessText').text(response.message);
+                    $('#divSuccess').show('fade');
+                },
+                error: function (response) {
+                    $('.alert-success').hide();
+                    $('.alert-danger').hide();
+                    $('#divErrorText').text(response.responseJSON.message);
+                    $('#divError').show('fade');
+                }
+            });
+        }
+        return true;
+    });
+
+    $('#linkClose').click(function () {
+        $('#divSuccess').hide('fade');
+    });
+
+    $('#linkClose2').click(function () {
+        $('#divError').hide('fade');
+    });
+
+
+    $("#txtDeletePhoto").click(function () {
+
+        var info2 = new Object();
+        info2.Id = $('#txtId').val();
+        info2.Photo = "";
+        info2.UserId = sessionStorage.getItem('UserId');
+
+        Token = 'Bearer ' + sessionStorage.getItem('Token');
+
+        $.ajax({
+            url: "http://tmdcontacts-api.dev.tmd/api/Contacts/Update",
+            type: "POST",
+            data: JSON.stringify(info2),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: {
+                'Authorization': Token
+            },
+            success: function (response) {
+                $('#divSuccessText').text(response.message);
+                $('#divSuccess').show('fade');
+            },
+            error: function (response) {
+                $('#divErrorText').text(response.responseJSON.message);
+                $('#divError').show('fade');
+            }
+        });
+        return true;
+    });
+
+</script>

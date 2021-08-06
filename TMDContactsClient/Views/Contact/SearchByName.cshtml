@@ -1,0 +1,58 @@
+﻿@model IEnumerable<TMDContactsClient.Models.Contacts>
+@{
+    ViewBag.Title = "SearchByName";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .Profile {
+        vertical-align: middle;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+
+    .Profile2 {
+        vertical-align: middle;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+</style>
+
+
+<div class="bs-example card card-1">
+    <div class="text-center">
+        <h4 class="text-danger ">@ViewBag.Basarisiz</h4>
+    </div>
+    <table class="table">
+
+        <tbody>
+
+            @foreach (var contact in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="text-center">
+                            <a href="~/Contact/Profiles/@contact.Id" data-abc="true">
+                                @if (contact.Photo == null || contact.Photo == "")
+                                {
+                                    <img src="~/İmage/ProfilePhoto.png" class="Profile2" id="IndexImg" />
+                                }
+                                else
+                                {
+                                    <img src="data:image/png;base64, @contact.Photo" class="Profile2" id="IndexImg">
+                                }
+                            </a>
+                        </div>
+                    </td>
+                    <td style="padding-top:18px;"> <a href="~/Contact/Profiles/@contact.Id" data-abc="true" style="color:black;"> @contact.Name @contact.Surname </a></td>
+                    <td style="color:black; padding-top:18px;"> @contact.Tel</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="text-align: center">
+    </div>
+</div>
+

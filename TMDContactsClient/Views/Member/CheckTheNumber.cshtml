@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> <!--responsive-->
+    <script src="~/Scripts/jquery-3.3.1.slim.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <style>
+        .form-control {
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-top:100px;">
+        <div class=" card-1" style="background-color:white;">
+            <h4 class="title text-center" style="padding-top: 20px; color:black;" id="myModalLabel">E-postanıza gönderilen şifreyi giriniz</h4>
+            <hr />
+            <!-- Display errors if any in the Bootstrap alert -->
+            <div id="divError" class="alert alert-danger collapse text-center">
+                <a id="linkClose" href="#" class="close">&times;</a>
+                <div id="divErrorText"></div>
+            </div>
+            <div class="text-center">
+                <span id="error"></span>
+            </div>
+            <form method="post" class="text-center" action="javascript:btnSendCheckNumber;">
+                <div class="col-md-12">
+                    <br />
+                    <div class="form-group">
+                        <label></label>
+                        <input type="text" class="form-control" id="txtCheckNumber" placeholder="" required maxlength="6">
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <div class="text-center">
+                        <button type="submit" id="btnSendCheckNumber" class="btn bn30" style="font-size:14px;">Gönder</button>
+                    </div>
+                    <br />
+                </div>
+            </form>
+            <br />
+        </div>
+    </div>
+
+    <script>
+        $('#linkClose').click(function () {
+            $('#divError').hide('fade');
+
+        });
+
+        $("#btnSendCheckNumber").click(function () {
+
+            var info = new Object();
+            info.CheckNumber = $('#txtCheckNumber').val().trim();
+
+            let Checkdata = sessionStorage.getItem('CheckPassword');
+
+            if (info.CheckNumber != Checkdata) {
+                $('#divErrorText').text('Girilen şifre yalnış');
+                $('#divError').show('fade');
+            }
+            else {
+                window.location.href = "NewPassword";
+            }
+            return true;
+        });
+    </script>
+</body>
+</html>

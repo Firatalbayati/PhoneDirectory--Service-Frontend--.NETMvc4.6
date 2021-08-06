@@ -1,0 +1,166 @@
+﻿@model TMDContactsClient.Models.User
+@{
+    Layout = null;
+}
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> <!--responsive-->
+    <script src="~/Scripts/jquery-3.3.1.slim.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <style>
+        .form-control {
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-top:100px;">
+        <div class="card-1" style="background-color:white;">
+            <h4 class="title text-center" style="padding-top: 20px; color:black;">Kullanıcı Girişi</h4>
+            <hr />
+            <br />
+            <!--action formun kontroleri çalıştıktan sınra bizi javascripte bulunan btnLogin fonksiyonuna gönderir-->
+            <form method="post" class="text-center" action="javascript:btnLogin;">
+
+
+                <div style="padding-left:30px; padding-right:30px;">
+                    <div id="divError" class="alert alert-danger collapse text-center">
+                        <a id="linkClose" href="#" class="close">&times;</a>
+                        <div id="divErrorText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="error"></span>
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <div class="form-group">
+                        <label>E-Posta</label>
+                        <input type="email" class="form-control" id="txtEmail" aria-describedby="emailHelp" placeholder="E-Posta" required maxlength="60">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Şifre</label>
+                        <input type="password" class="form-control" id="txtPassword" placeholder="Şifre" maxlength="100" required value="Firat12345">
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <div class=" text-center">
+                        <button type="submit" id="btnLogin" onclick="setCookie()" class="btn bn30" style="font-size:14px;">Giriş</button>
+                    </div>
+                    <br />
+                </div>
+            </form>
+            <div>
+                <div class="foot-lnk text-center">
+                    <label for="tab-1">Hesabın yok mu? <a href="~/Member/Register">Kaydol</a></label>
+                </div>
+                <br />
+            </div>
+            <div class="modal-footer">
+                <div class="foot-lnk text-center">
+                    <label for="tab-1" style="color:white;"><a href="~/Member/ForgotPassword">Şifreni mi unuttun?</a></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+
+        function setCookie() {
+            //Clear all cookie
+            var cookies = document.cookie.split("; ");
+            for (var c = 0; c < cookies.length; c++) {
+                var d = window.location.hostname.split(".");
+                while (d.length > 0) {
+                    var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                    var p = location.pathname.split('/');
+                    document.cookie = cookieBase + '/';
+                    while (p.length > 0) {
+                        document.cookie = cookieBase + p.join('/');
+                        p.pop();
+                    };
+                    d.shift();
+                }
+            }
+
+            //set cookie
+            var now = new Date();
+            var time = now.getTime();
+            time += 3600 * 1000;
+            now.setTime(time);
+            document.cookie = 'Email=' + document.getElementById("txtEmail").value + '; expires=' + now.toUTCString() + '; path=/';
+            document.cookie = 'Token=' + document.getElementById(response.access_token).value + '; expires=' + now.toUTCString() + '; path=/';
+
+
+        }
+
+        $(document).ready(function () {
+
+            $('#linkClose').click(function () {
+                $('#divError').hide('fade');
+            });
+
+            $('#btnLogin').click(function () {
+
+                var info = new Object();
+                info.Email = $('#txtEmail').val().trim();
+                info.Password = $('#txtPassword').val().trim();
+
+                if (info.Email === "" || info.Password === "") {
+                    $('#divErrorText').text('Zorunlu alanları doldurunuz');
+                    $('#divError').show('fade');
+                }
+                else {
+
+                    $.ajax({
+                        // Post username, password & the grant type to /token
+                        url: 'http://tmdcontacts-api.dev.tmd/api/Auths/Login',
+                        method: 'POST',
+                        data: JSON.stringify(info),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            sessionStorage["Email"] = info.Email;
+                            sessionStorage["Password"] = info.Password;
+
+                            sessionStorage.setItem("token", response.access_token);
+                            //Convert obj to string
+                            const StringToken = JSON.stringify(response);
+
+                            const ReplaceToken = StringToken.replace(":", "&");
+
+                            var mySubString = ReplaceToken.substring(
+                                ReplaceToken.lastIndexOf("&") + 1,
+                                ReplaceToken.lastIndexOf(",")
+                            );
+
+                            const Token = mySubString.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, "")
+
+                            var now = new Date();
+                            var time = now.getTime();
+                            time += 3600 * 1000;
+                            now.setTime(time);
+                            document.cookie = 'Token=' + Token + '; expires=' + now.toUTCString() + '; path=/';
+                            document.location.href = "/Contact/Index";
+                        },
+                        error: function (response) {
+                            $('.alert-danger').hide();
+                            $('#divErrorText').text(response.responseJSON.message);
+                            $('#divError').show('fade');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

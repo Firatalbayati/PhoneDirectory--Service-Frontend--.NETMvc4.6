@@ -1,0 +1,22 @@
+﻿@model IList<TMDContactsClient.Models.Groups>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-1 card">
+    <div class="list-group list-group-mine" style="padding-top:10px; padding-left:20px; padding-right:20px;">
+        <h1>@ViewBag.basarili</h1>
+        @foreach (var item in Model)
+        {
+            <a href="~/Group/Profiles/@item.Id" class="list-group-item list-group-item-action" style="margin-bottom:2px; color:black;">
+                @Html.DisplayFor(modelItem => item.Name)
+            </a>
+        }
+    </div>
+    <div class="modal-footer">
+        <a href="~/Group/Add" class="btn bn30" style="font-size:11px;" role="button">Grup Ekle</a>
+    </div>
+</div>
+
+

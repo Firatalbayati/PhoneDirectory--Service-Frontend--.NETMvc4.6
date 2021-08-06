@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script src="~/Scripts/jquery-3.3.1.slim.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<div class="card card-1 ">
+    <div class="modal-header" style="border: 0;">
+        <a href="~/Group/Index" class="close" data-dismiss="modal" style="color:red;" role="button">&times;</a>
+        <h4 class="modal-title text-center" style="padding-top: 15px; color:black;" id="myModalLabel">Yeni Grup Ekle</h4>
+    </div>
+    <form method="post" action="javascript:btnAdd;">
+        <div class="col-md-12">
+            <div class="row" style="padding-top: 16px;">
+
+                <div style="padding-left:30px; padding-right:30px;">
+                    <!-- Display success if any in the Bootstrap alert -->
+                    <div id="divSuccess" class="alert alert-success collapse text-center">
+                        <a id="linkClose" href="#" class="close">&times;</a>
+                        <div id="divSuccessText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="Success"></span>
+                    </div>
+                    <!-- Display errors if any in the Bootstrap alert -->
+                    <div id="divError" class="alert alert-danger collapse text-center">
+                        <a id="linkClose2" href="#" class="close">&times;</a>
+                        <div id="divErrorText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="error"></span>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="Font">Grup Adı</label>
+                    <input type="text" class="form-control" id="txtName" placeholder="Grup Adı" required maxlength="60">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" id="btnAdd" class="btn bn30" style="font-size:11px;">Kaydet</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+    $("#btnAdd").click(function () {
+
+        var info = new Object();
+        info.Name = $('#txtName').val().trim();
+        info.UserId = sessionStorage.getItem('UserId');
+        Token = 'Bearer ' + sessionStorage.getItem('Token');
+
+        if (info.Name === "") {
+            $('#divErrorText').text('Zorunlu alanları doldurunuz');
+            $('#divError').show('fade');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "http://tmdcontacts-api.dev.tmd/api/Groups/Add",
+                data: JSON.stringify(info),
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: {
+                    'Authorization': Token
+                },
+                success: function (response) {
+                    $('.alert-success').hide();
+                    $('.alert-danger').hide();
+                    $('#divSuccessText').text(response.message);
+                    $('#divSuccess').show('fade');
+                },
+                error: function (response) {
+                    $('.alert-success').hide();
+                    $('.alert-danger').hide();
+                    $('#divErrorText').text(response.responseJSON.message);
+                    $('#divError').show('fade');
+                }
+            });
+        }
+        return true;
+    });
+
+    $('#linkClose').click(function () {
+        $('#divSuccess').hide('fade');
+    });
+
+    $('#linkClose2').click(function () {
+        $('#divError').hide('fade');
+    });
+
+</script>

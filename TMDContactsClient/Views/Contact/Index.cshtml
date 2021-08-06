@@ -1,0 +1,74 @@
+﻿@model TMDContactsClient.Models.ContactPaginationListViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .Profile {
+        vertical-align: middle;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+
+    .Profile2 {
+        vertical-align: middle;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+</style>
+
+<div class="bs-example card card-1" style="border-radius: 10px;">
+    <table class="table">
+        <tbody>
+
+            @foreach (var contact in Model.Data)
+            {
+                <tr>
+                    <td>
+                        <div class="text-center">
+                            <a href="~/Contact/Profiles/@contact.Id" data-abc="true">
+                                @if (contact.Photo == null || contact.Photo == "")
+                                {
+                                    <img src="~/İmage/ProfilePhoto.png" class="Profile2" id="IndexImg" />
+                                }
+                                else
+                                {
+                                    <img src="data:image/png;base64, @contact.Photo" class="Profile2" id="IndexImg">
+                                }
+                            </a>
+                        </div>
+
+                    </td>
+                    <td style="padding-top:18px;"> <a href="~/Contact/Profiles/@contact.Id" data-abc="true" style="color:black;"> @contact.Name @contact.Surname </a></td>
+                    <td style="padding-top:18px;"> <a href="~/Contact/Profiles/@contact.Id" data-abc="true" style="color:black;"> @contact.Tel </a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div style="text-align: center">
+        <div class="pagination">
+            <a href="~/Contact/Index/@Model.FirstPage">&laquo;</a>
+            @if (@Model.PreviousPage == 0)
+            {
+            }
+            else
+            {
+                <a href="~/Contact/Index/@Model.PreviousPage">&#60;</a>
+                <a href="~/Contact/Index/@Model.PreviousPage">@Model.PreviousPage</a>
+            }
+            <a href="~/Contact/Index/@Model.CurrentPage" class="active">@Model.CurrentPage</a>
+            @if (@Model.NextPage == 0)
+            {
+            }
+            else
+            {
+                <a href="~/Contact/Index/@Model.NextPage">@Model.NextPage</a>
+                <a href="~/Contact/Index/@Model.NextPage">&rsaquo;</a>
+            }
+            <a href="~/Contact/Index/@Model.LastPage">&raquo;</a>
+        </div>
+    </div>
+</div>

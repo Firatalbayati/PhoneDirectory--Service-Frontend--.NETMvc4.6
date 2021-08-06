@@ -1,0 +1,133 @@
+﻿<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> <!--responsive-->
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+
+<body onload="myFunction()">
+    <nav class="navbar navbar-default" style="border-color:dodgerblue; background-image: linear-gradient(45deg, #4568dc, #b06ab3)">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button style="color:white;" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="~/Contact/Index" class="navbar-brand" style="color:white;">Ana Sayfa</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="~/Contact/Add" style="color:white;">Yeni Kişi</a></li>
+                    <li><a href="~/Group/Index" style="color:white;">Gruplar</a></li>
+                </ul>
+                <ul class="dropdown nav navbar-nav navbar-right">
+                    <li>
+                        <div style="padding-left:15px; padding-top:5px;">
+                            @if (@Session["Photo"].ToString() == "")
+                            {
+                                <img src="~/İmage/ProfilePhoto.png" onclick="myDropdownFunction()" class="dropbtn profile2" />
+                            }
+                            else
+                            {
+                                <img src="data:image/png;base64,@Session["Photo"].ToString()" onclick="myDropdownFunction()" class="dropbtn profile2">
+                            }
+                            <div id="myDropdown" class="dropdown-content">
+                                <a href="~/Member/MemberProfile/@Session["UserId"].ToString()" style="padding-top:10px; text-decoration:none;">Profil</a>
+                                <a href="" id="btnLogout" onclick="logout()" style="text-decoration:none;">Çıkış</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <form action="/Contact/SearchByName" method="post" class="navbar-form navbar-right" role="search">
+                    <div class="input-group">
+                        <input style="border-color:dodgerblue;" required class="form-control" type="text" name="Search" placeholder="Ara">
+                        <span class="input-group-btn">
+                            <input style="border-color:dodgerblue; font-size:12px;" class="btn bn30 btn-default" type="submit" value="Ara">
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <br />
+    <footer class="text-center navbar-fixed-bottom bn30 " style="font-size:1px; border-radius:0px;">
+        <a href="https://www.tmgrup.com.tr" style="color:white;"><p style="padding-top:10px; font-size:11px;">© @DateTime.Now.Year - Turkuvaz Medya Grubu </p></a>
+    </footer>
+</body>
+</html>
+
+
+<script>
+    //Body onload
+    function myFunction() {
+
+        var cookies = document.cookie
+            .split(';')
+            .map(cookie => cookie.split('='))
+            .reduce((accumulator, [key, value]) => ({ ...accumulator, [key.trim()]: decodeURIComponent(value) }),
+                {});
+
+        sessionStorage.setItem("UserId", cookies.UserId);
+        sessionStorage.setItem("Token", cookies.Token);
+        sessionStorage.setItem("Email", cookies.Email);
+
+    }
+
+    function logout() {
+
+        sessionStorage.removeItem("UserId");
+        sessionStorage.removeItem("Email");
+        sessionStorage.removeItem("token");
+        document.location.href = "/Member/Login";
+
+        //Clear all cookie
+        var cookies = document.cookie.split("; ");
+        for (var c = 0; c < cookies.length; c++) {
+            var d = window.location.hostname.split(".");
+            while (d.length > 0) {
+                var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                var p = location.pathname.split('/');
+                document.cookie = cookieBase + '/';
+                while (p.length > 0) {
+                    document.cookie = cookieBase + p.join('/');
+                    p.pop();
+                };
+                d.shift();
+            }
+        }
+    }
+
+    /* When the user clicks on the button, toggle between hiding and showing the dropdown content */
+    function myDropdownFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>

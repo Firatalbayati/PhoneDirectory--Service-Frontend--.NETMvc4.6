@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Wait";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center" style="text-align:center;">
+    <div class="lds-hourglass" style="padding-top:260px; padding-right:120px; margin-bottom:260px; "></div>
+    <h3>Sayfa Yükleniyor... Lütfen Bekleyin</h3>
+</div>
+
+
+<script>
+    window.onload = function () {
+
+        sessionStorage.removeItem("token");
+        var info = new Object();
+        info.Email = sessionStorage["Email"];
+        info.Password = sessionStorage["Password"];
+
+        if (info.Email === "" || info.Password === "") {
+        }
+        else {
+            $.ajax({
+
+                // Post username, password & the grant type to /token
+                url: 'http://tmdcontacts-api.dev.tmd/api/Auths/Login',
+                method: 'POST',
+                data: JSON.stringify(info),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    sessionStorage.setItem("token", response.access_token);
+                    //Convert obj to string
+                    const StringToken = JSON.stringify(response);
+
+                    const ReplaceToken = StringToken.replace(":", "&");
+
+                    var mySubString = ReplaceToken.substring(
+                        ReplaceToken.lastIndexOf("&") + 1,
+                        ReplaceToken.lastIndexOf(",")
+                    );
+
+                    const Token = mySubString.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, "")
+
+                    var now = new Date();
+                    var time = now.getTime();
+                    time += 3600 * 1000;
+                    now.setTime(time);
+                    document.cookie = 'Token=' + Token + '; expires=' + now.toUTCString() + '; path=/';
+                    document.location.href = "/Contact/Index";
+                },
+                // Display errors if any in the Bootstrap alert <div>
+                error: function (jqXHR) {
+                    $('#divErrorText').text('E-Posta veya şifre yalnış');
+                    $('#divError').show('fade');
+                }
+            });
+        }
+    };
+
+</script>
+
+

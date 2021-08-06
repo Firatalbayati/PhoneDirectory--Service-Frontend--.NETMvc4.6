@@ -1,0 +1,184 @@
+﻿@model TMDContactsClient.Models.User
+@{
+    Layout = null;
+}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> <!--responsive-->
+    <script src="~/Scripts/jquery-3.3.1.slim.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <style>
+        .form-control {
+            margin: auto;
+        }
+    </style>
+</head>
+<body style="padding-top:20px">
+    <div class="container">
+        <div class=" card-1" style="background-color:white;">
+            <h4 class="title text-center" style="padding-top: 20px; color:black;">Kayıt Ekranı</h4>
+            <hr />
+            <!--action formun kontroleri çalıştıktan sınra bizi javascripte bulunan btnRegister fonksiyonuna gönderir-->
+            <form class="text-center" action="javascript:btnRegister;">
+
+                <div style="padding-left:30px; padding-right:30px;">
+                    <!-- Display success if any in the Bootstrap alert -->
+                    <div id="divSuccess" class="alert alert-success collapse text-center">
+                        <a id="linkClose" href="#" class="close">&times;</a>
+                        <div id="divSuccessText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="Success"></span>
+                    </div>
+                    <!-- Display errors if any in the Bootstrap alert -->
+                    <div id="divError" class="alert alert-danger collapse text-center">
+                        <a id="linkClose2" href="#" class="close">&times;</a>
+                        <div id="divErrorText"></div>
+                    </div>
+                    <div class="text-center">
+                        <span id="error"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <span id='message'></span>
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" class="form-control" id="txtName" placeholder="Ad" required maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" class="form-control" id="txtSurName" placeholder="Soyad" required maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Tel</label>
+                        <input type="tel" class="form-control" placeholder="05341234567" pattern="[0-9]{4}[0-9]{3}[0-9]{4}" required id="txtTel" name="Tel" maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>E-Posta</label>
+                        <input type="email" class="form-control" id="txtEmail" aria-describedby="emailHelp" placeholder="E-Posta" required maxlength="60">
+                    </div>
+                    <div class="form-group">
+                        <label>Şifre</label>
+                        <input type="password" class="form-control" id="txtPassword" placeholder="Şifre" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="En az bir rakam, bir büyük ve küçük harf ve en az 8 karakter içermelidir" value="" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tekrar Şifre</label>
+                        <input type="password" class="form-control" id="txtConfirmPassword" name="confirm_password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="En az bir rakam, bir büyük ve küçük harf ve en az 8 karakter içermelidir" placeholder="Şifre" value="" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fotoğraf Seç</label>
+                        <input class="form-control input upload-file" data-max-size="2048" style="padding-bottom: 28px;" type="file" id="txtPhoto" name="Photo" onchange="OnFileValidation()" multiple accept="image/png, image/gif, image/jpeg" />
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <div class="text-center">
+                        <button type="submit" id="btnRegister" class="btn bn30" style="font-size:14px;">Kaydol</button>
+                    </div>
+                    <br />
+                    <span id="error"></span>
+                    <br />
+                </div>
+                <div id="divError" class="alert alert-danger collapse">
+                    <a id="linkClose" href="#" class="close">&times;</a>
+                    <div id="divErrorText"></div>
+                </div>
+            </form>
+
+            <div class="modal-footer">
+                <div class="foot-lnk text-center">
+                    <label for="tab-1"> Zaten üye misin? <a href="~/Member/Login">Giriş yap</a></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        var uploadField = document.getElementById("txtPhoto");
+
+        uploadField.onchange = function () {
+            if (this.files[0].size > 1048576) {
+                //1 Mb
+                $('#divErrorText').text('Dosya boyutu 1mb den büyük olamaz!');
+                $('#divError').show('fade');
+                this.value = "";
+            }
+            else {
+                //Base64String
+                var file = document.querySelector('input[type=file]')['files'][0];
+                let base64String = "";
+
+                var reader = new FileReader();
+
+                reader.onload = function () {
+                    base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+                    imageBase64String = base64String;
+                }
+                reader.readAsDataURL(file);
+            };
+        };
+
+
+        $("#btnRegister").click(function () {
+
+            var password = document.getElementById("txtPassword").value;
+            var confirmPassword = document.getElementById("txtConfirmPassword").value;
+            if (password != confirmPassword) {
+                $('#divErrorText').text('Şifreleriniz Eşleşmiyor.');
+                $('#divError').show('fade');
+                return false;
+            }
+            else {
+                var info = new Object();
+                info.Name = $('#txtName').val().trim();
+                info.Surname = $('#txtSurName').val().trim();
+                info.Tel = $('#txtTel').val().trim();
+                info.Email = $('#txtEmail').val().trim();
+                info.Password = $('#txtPassword').val().trim();
+                if (document.getElementById("txtPhoto").files.length == 0) {
+                    info.Photo = null;
+                }
+                else {
+                    info.Photo = imageBase64String;
+                }
+
+                if (info.Name === "" || info.Surname === "" || info.Tel === "" || info.Email === "" || info.Password === "") {
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://tmdcontacts-api.dev.tmd/api/Auths/Register",
+                        data: JSON.stringify(info),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            document.location.href = "/Member/Login";
+                        },
+                        error: function (response) {
+                            $('.alert-danger').hide();
+                            $('#divErrorText').text(response.responseJSON.message);
+                            $('#divError').show('fade');
+                        }
+                    });
+                }
+            }
+            return true;
+        });
+
+        $('#linkClose').click(function () {
+            $('#divSuccess').hide('fade');
+        });
+
+        $('#linkClose2').click(function () {
+            $('#divError').hide('fade');
+        });
+
+    </script>
+</body>
+</html>

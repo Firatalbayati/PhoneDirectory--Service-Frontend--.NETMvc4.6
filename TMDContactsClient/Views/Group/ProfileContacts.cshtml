@@ -1,0 +1,72 @@
+﻿@model IEnumerable<TMDContactsClient.Models.Contacts>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="container-fluid d-flex justify-content-center">
+            <div class="list list-row " id="sortable" data-sortable-id="0" aria-dropeffect="move" style="padding-top: 10px; padding-bottom:20px;">
+                <form action="javascript:btnDeleteContact;">
+
+                    <div style="padding-left:30px; padding-right:30px;">
+                        <!-- Display errors if any in the Bootstrap alert -->
+                        <div id="divSuccess" class="alert alert-success collapse text-center">
+                            <a id="linkClose" href="#" class="close">&times;</a>
+                            <div id="divSuccessText"></div>
+                        </div>
+                        <div class="text-center">
+                            <span id="Success"></span>
+                        </div>
+                    </div>
+
+                    @foreach (var item in Model)
+                    {
+                        <input id="txtContactId" value="@item.Id" type="hidden" asp-for="Id" name="Id" />
+                        <div class="list-item" data-id="13" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="">
+
+                            <div>
+
+                                <div class="text-center">
+                                    <a href="~/Contact/Profiles/@item.Id" data-abc="true">
+                                        @if (@item.Photo == null || @item.Photo == "")
+                                        {
+                                            <img src="~/İmage/ProfilePhoto.png" class="Profile" id="IndexImg" />
+                                        }
+                                        else
+                                        {
+                                            <img src="data:image/png;base64, @item.Photo" class="Profile" id="IndexImg">
+                                        }
+                                    </a>
+                                </div>
+
+                            </div>
+                            <div class="flex">
+                                <a href="~/Contact/Profiles/@item.Id" class="item-author text-color" style="color:black;">@item.Name @item.Surname</a>
+                                <div class="item-except text-muted text-sm h-1x" style="color:black; font-size:11px;">@item.Note</div>
+                            </div>
+                            <div>
+                                <a href="~/Group/DeleteGroupContact/@item.Id" class="btn bn30" style="font-size:4px;" role="button">
+                                    <i class="bi bi-person-dash-fill"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11 7.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
+                                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                    </svg>
+                                </a>
+                            </div>
+
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script>
+            $('#divSuccessText').text(response.message);
+            $('#divSuccess').show('fade');
+
+            $('#linkClose').click(function () {
+                $('#divSuccess').hide('fade');
+            });
+    </script>*@
