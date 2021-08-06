@@ -227,7 +227,6 @@
             info.Note = $('#txtNote').val().trim();
             info.UserId = sessionStorage.getItem('UserId');
             Token = 'Bearer ' + sessionStorage.getItem('Token');
-            debugger
 
             if (info.Name === "" || info.Surname === "" || phoneNumber === "" || info.Email === "") {
                 $('#divErrorText').text('Zorunlu alanları doldurunuz');
